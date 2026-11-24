@@ -1,0 +1,185 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidPortfolioItem(data) {
+      return data.title is string && data.title.size() <= 200 &&
+             data.category is string && data.category.size() <= 50 &&
+             data.imageUrl is string && data.imageUrl.size() <= 800000 &&
+             data.description is string && data.description.size() <= 2000;
+    }
+
+    function isValidPrice(data) {
+      return data.company_name is string && data.company_name.size() <= 100 &&
+             data.product_name is string && data.product_name.size() <= 100 &&
+             data.price is number && data.price >= 0;
+    }
+
+    function isValidComplaint(data) {
+      return data.customer_name is string && data.customer_name.size() <= 150 &&
+             data.phone is string && data.phone.size() <= 30 &&
+             data.complaint_text is string && data.complaint_text.size() <= 2000;
+    }
+
+    function isValidOrder(data) {
+      return data.customer_name is string && data.customer_name.size() <= 150 &&
+             data.phone is string && data.phone.size() <= 30 &&
+             data.status is string && data.status.size() <= 30;
+    }
+
+    function isValidFeedback(data) {
+      return data.name is string && data.name.size() <= 150 &&
+             data.phone is string && data.phone.size() <= 30 &&
+             data.type is string && data.type.size() <= 50 &&
+             data.message is string && data.message.size() <= 3000 &&
+             data.status is string && data.status.size() <= 30;
+    }
+
+    function isValidAnalytics(data) {
+      return data.keys().hasAll(['totalVisits', 'uniqueVisitors', 'updatedAt']) &&
+             data.keys().hasOnly(['totalVisits', 'uniqueVisitors', 'updatedAt']) &&
+             data.totalVisits is int && data.totalVisits >= 0 &&
+             data.uniqueVisitors is int && data.uniqueVisitors >= 0 &&
+             data.updatedAt is string && data.updatedAt.size() <= 100;
+    }
+
+    function isValidCalculatorLead(data) {
+      return data.keys().hasAll([
+               'name', 'phone', 'total_area', 'ceiling_area', 'walls_area',
+               'rooms_count', 'receptions_count', 'corridors_count',
+               'dimensions_summary', 'materials_summary', 'status', 'created_at'
+             ]) &&
+             data.keys().hasOnly([
+               'name', 'phone', 'total_area', 'ceiling_area', 'walls_area',
+               'rooms_count', 'receptions_count', 'corridors_count',
+               'dimensions_summary', 'materials_summary', 'status', 'created_at', 'updated_at'
+             ]) &&
+             data.name is string && data.name.size() >= 1 && data.name.size() <= 150 &&
+             data.phone is string && data.phone.size() >= 8 && data.phone.size() <= 30 &&
+             data.total_area is number && data.total_area >= 0 &&
+             data.ceiling_area is number && data.ceiling_area >= 0 &&
+             data.walls_area is number && data.walls_area >= 0 &&
+             data.rooms_count is int && data.rooms_count >= 0 &&
+             data.receptions_count is int && data.receptions_count >= 0 &&
+             data.corridors_count is int && data.corridors_count >= 0 &&
+             data.dimensions_summary is string && data.dimensions_summary.size() <= 1500 &&
+             data.materials_summary is string && data.materials_summary.size() <= 2000 &&
+             data.status in ['new', 'contacted'] &&
+             data.created_at is string && data.created_at.size() <= 100 &&
+             (!('updated_at' in data) || (data.updated_at is string && data.updated_at.size() <= 100));
+    }
+
+    function isValidGalleryItem(data) {
+      return data.title is string && data.title.size() <= 200 &&
+             data.imageUrl is string && data.imageUrl.size() <= 800000 &&
+             (!('stageName' in data) || (data.stageName is string && data.stageName.size() <= 100)) &&
+             (!('description' in data) || (data.description is string && data.description.size() <= 1000)) &&
+             (!('order' in data) || data.order is number);
+    }
+
+    function isValidReview(data) {
+      return data.keys().hasAll(['name', 'comment', 'rating', 'created_at']) &&
+             data.keys().hasOnly(['name', 'comment', 'rating', 'project', 'location', 'created_at']) &&
+             data.name is string && data.name.size() >= 1 && data.name.size() <= 150 &&
+             data.comment is string && data.comment.size() >= 1 && data.comment.size() <= 2000 &&
+             data.rating is int && data.rating >= 1 && data.rating <= 5 &&
+             data.created_at is string && data.created_at.size() >= 1 && data.created_at.size() <= 100 &&
+             (!('project' in data) || (data.project is string && data.project.size() <= 150)) &&
+             (!('location' in data) || (data.location is string && data.location.size() <= 100));
+    }
+
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 1. Portfolio items: Public read, authorized write
+    match /portfolio/{itemId} {
+      allow read: if true;
+      allow create: if isValidId(itemId) && isValidPortfolioItem(incoming());
+      allow update: if isValidId(itemId) && isValidPortfolioItem(incoming());
+      allow delete: if isValidId(itemId);
+    }
+
+    // 2. Prices & Materials: Public read, authorized write
+    match /prices/{priceId} {
+      allow read: if true;
+      allow create: if isValidId(priceId) && isValidPrice(incoming());
+      allow update: if isValidId(priceId) && isValidPrice(incoming());
+      allow delete: if isValidId(priceId);
+    }
+
+    // 3. Customer inquiries / complaints: Public insert, get by id
+    match /complaints/{complaintId} {
+      allow create: if isValidId(complaintId) && isValidComplaint(incoming());
+      allow get: if isValidId(complaintId);
+    }
+
+    // 4. Customer orders / inspection requests: Public insert, admin management
+    match /orders/{orderId} {
+      allow create: if isValidId(orderId) && isValidOrder(incoming());
+      allow get, update, delete: if isValidId(orderId);
+      allow list: if true;
+    }
+
+    // 5. Customer feedback (complaints & suggestions): Public insert, admin management
+    match /feedback/{feedbackId} {
+      allow create: if isValidId(feedbackId) && isValidFeedback(incoming());
+      allow get, update, delete: if isValidId(feedbackId);
+      allow list: if true;
+    }
+
+    // 6. Site Visitor Analytics: Atomic monotonic increment & read
+    match /analytics/{statId} {
+      allow get: if isValidId(statId);
+      allow create: if isValidId(statId) && isValidAnalytics(incoming());
+      allow update: if isValidId(statId) &&
+                    isValidAnalytics(incoming()) &&
+                    incoming().diff(existing()).affectedKeys().hasOnly(['totalVisits', 'uniqueVisitors', 'updatedAt']) &&
+                    incoming().totalVisits >= existing().totalVisits &&
+                    incoming().uniqueVisitors >= existing().uniqueVisitors;
+    }
+
+    // 7. Calculator Soft-Gate Leads: Public create, admin read/update/delete
+    match /calculator_leads/{leadId} {
+      allow create: if isValidId(leadId) && isValidCalculatorLead(incoming());
+      allow get, delete: if isValidId(leadId);
+      allow list: if true;
+      allow update: if isValidId(leadId) &&
+                    isValidCalculatorLead(incoming()) &&
+                    incoming().diff(existing()).affectedKeys().hasOnly(['status', 'updated_at']) &&
+                    incoming().name == existing().name &&
+                    incoming().phone == existing().phone &&
+                    incoming().created_at == existing().created_at;
+    }
+
+    // 8. Execution Stages Gallery: Public read for client app
+    match /gallery/{itemId} {
+      allow read: if true;
+      allow create: if isValidId(itemId) && isValidGalleryItem(incoming());
+      allow update: if isValidId(itemId) && isValidGalleryItem(incoming());
+      allow delete: if isValidId(itemId);
+    }
+
+    // 9. Customer Reviews: Public get/list/create, strictly immutable (no update or delete)
+    match /reviews/{reviewId} {
+      allow get: if isValidId(reviewId);
+      allow list: if true;
+      allow create: if isValidId(reviewId) && isValidReview(incoming());
+      allow update, delete: if false;
+    }
+  }
+}

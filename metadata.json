@@ -1,0 +1,6 @@
+{
+  "name": "حاسبة مقاول الدهانات والديكور",
+  "description": "تطبيق أندرويد عربي لمقاولي الدهانات لحساب مساحات الحوائط، خصم الأبواب والشبابيك، وتقدير كميات الدهان وتكلفة المشروع بدقة وسهولة.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

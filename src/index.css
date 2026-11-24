@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-page: #f8f9fa;
+    --bg-card: #ffffff;
+    --bg-card-subtle: #faf8f5;
+    --copper-primary: #b86221;
+    --copper-light: #df9b6d;
+    --copper-dark: #8c4a1e;
+    --text-primary: #1c1917;
+    --text-secondary: #57534e;
+  }
+
+  body {
+    background-color: #f8f9fa;
+    color: #1c1917;
+  }
+}
+
+/* Metallic Copper Glow & Gradients */
+.copper-glow {
+  box-shadow: 0 4px 20px -2px rgba(184, 98, 33, 0.18);
+}
+
+.copper-glow-lg {
+  box-shadow: 0 10px 30px -4px rgba(184, 98, 33, 0.25);
+}
+
+.copper-text-gradient {
+  background: linear-gradient(135deg, #9e4f1a 0%, #c87a3e 50%, #7c3a10 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.copper-btn-gradient {
+  background: linear-gradient(135deg, #df9b6d 0%, #b86221 50%, #8c4a1e 100%);
+  color: #ffffff;
+}
+
+.copper-btn-gradient:hover {
+  background: linear-gradient(135deg, #e5a77d 0%, #c46d2c 50%, #995424 100%);
+}

@@ -1,0 +1,442 @@
+{
+  "entities": {
+    "PortfolioItem": {
+      "title": "Portfolio Item",
+      "description": "Represents a completed paint or decoration project in the portfolio",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Title of the project",
+          "maxLength": 200
+        },
+        "category": {
+          "type": "string",
+          "description": "Primary category of the project",
+          "maxLength": 50
+        },
+        "categoryName": {
+          "type": "string",
+          "description": "Arabic display name for the category",
+          "maxLength": 100
+        },
+        "location": {
+          "type": "string",
+          "description": "Location or execution place",
+          "maxLength": 100
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the project image",
+          "maxLength": 800000
+        },
+        "price": {
+          "type": "number",
+          "description": "Optional price of the product or project"
+        },
+        "storageSource": {
+          "type": "string",
+          "description": "Storage provider source (e.g. firebase_storage)",
+          "maxLength": 50
+        },
+        "paintUsed": {
+          "type": "string",
+          "description": "Materials or paint used in this project",
+          "maxLength": 300
+        },
+        "colorCode": {
+          "type": "string",
+          "description": "Color code or material model",
+          "maxLength": 100
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the project execution",
+          "maxLength": 2000
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when this item was added",
+          "maxLength": 100
+        }
+      },
+      "required": ["title", "category", "imageUrl", "description"]
+    },
+    "PriceProduct": {
+      "title": "Price Product",
+      "description": "Paint brand material price and bucket specification",
+      "type": "object",
+      "properties": {
+        "company_name": {
+          "type": "string",
+          "description": "Brand or manufacturer company name",
+          "maxLength": 100
+        },
+        "product_name": {
+          "type": "string",
+          "description": "Product line or grade name",
+          "maxLength": 100
+        },
+        "price": {
+          "type": "number",
+          "description": "Price in Egyptian Pounds (EGP)"
+        },
+        "description": {
+          "type": "string",
+          "description": "Product notes or description",
+          "maxLength": 300
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last price update timestamp",
+          "maxLength": 100
+        }
+      },
+      "required": ["company_name", "product_name", "price"]
+    },
+    "CustomerComplaint": {
+      "title": "Customer Complaint or Inquiry",
+      "description": "Client message or complaint submitted through customer service",
+      "type": "object",
+      "properties": {
+        "customer_name": {
+          "type": "string",
+          "description": "Name of the customer",
+          "maxLength": 150
+        },
+        "phone": {
+          "type": "string",
+          "description": "Phone number of the customer",
+          "maxLength": 30
+        },
+        "complaint_text": {
+          "type": "string",
+          "description": "Complaint or inquiry details",
+          "maxLength": 2000
+        },
+        "created_at": {
+          "type": "string",
+          "description": "Submission timestamp",
+          "maxLength": 100
+        }
+      },
+      "required": ["customer_name", "phone", "complaint_text"]
+    },
+    "CustomerOrder": {
+      "title": "Customer Order or Inspection Request",
+      "description": "Customer order or consultation request with status workflow",
+      "type": "object",
+      "properties": {
+        "customer_name": {
+          "type": "string",
+          "description": "Name of client",
+          "maxLength": 150
+        },
+        "phone": {
+          "type": "string",
+          "description": "Phone number",
+          "maxLength": 30
+        },
+        "address": {
+          "type": "string",
+          "description": "Address or location",
+          "maxLength": 200
+        },
+        "service_type": {
+          "type": "string",
+          "description": "Requested service or project",
+          "maxLength": 150
+        },
+        "total_cost": {
+          "type": "number",
+          "description": "Estimated cost"
+        },
+        "status": {
+          "type": "string",
+          "description": "Order status (new, in_progress, completed, cancelled)",
+          "maxLength": 30
+        },
+        "notes": {
+          "type": "string",
+          "description": "Order notes",
+          "maxLength": 1000
+        },
+        "created_at": {
+          "type": "string",
+          "description": "Order creation timestamp",
+          "maxLength": 100
+        }
+      },
+      "required": ["customer_name", "phone", "status"]
+    },
+    "CustomerFeedback": {
+      "title": "Customer Feedback",
+      "description": "Customer complaint or suggestion submitted from the website",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Customer full name",
+          "maxLength": 150
+        },
+        "phone": {
+          "type": "string",
+          "description": "Customer phone number",
+          "maxLength": 30
+        },
+        "type": {
+          "type": "string",
+          "description": "Feedback type: complaint or suggestion",
+          "maxLength": 50
+        },
+        "message": {
+          "type": "string",
+          "description": "Message content",
+          "maxLength": 3000
+        },
+        "status": {
+          "type": "string",
+          "description": "Status (new, replied)",
+          "maxLength": 30
+        },
+        "created_at": {
+          "type": "string",
+          "description": "Creation timestamp",
+          "maxLength": 100
+        }
+      },
+      "required": ["name", "phone", "type", "message", "status"]
+    },
+    "SiteStats": {
+      "title": "Site Visitor Statistics",
+      "description": "Real-time visitor counter and unique visitor tracking for the app",
+      "type": "object",
+      "properties": {
+        "totalVisits": {
+          "type": "number",
+          "description": "Total number of app visits"
+        },
+        "uniqueVisitors": {
+          "type": "number",
+          "description": "Count of unique visitors tracked"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last visit timestamp",
+          "maxLength": 100
+        }
+      },
+      "required": ["totalVisits", "uniqueVisitors", "updatedAt"]
+    },
+    "CalculatorLead": {
+      "title": "Calculator Lead",
+      "description": "Soft-gate lead captured from the material calculator with dimensions and estimated quantities",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Customer name",
+          "maxLength": 150
+        },
+        "phone": {
+          "type": "string",
+          "description": "Customer 11-digit mobile phone",
+          "maxLength": 30
+        },
+        "total_area": {
+          "type": "number",
+          "description": "Total calculated paint area in square meters"
+        },
+        "ceiling_area": {
+          "type": "number",
+          "description": "Ceiling area in square meters"
+        },
+        "walls_area": {
+          "type": "number",
+          "description": "Net walls area in square meters"
+        },
+        "rooms_count": {
+          "type": "number",
+          "description": "Number of rooms"
+        },
+        "receptions_count": {
+          "type": "number",
+          "description": "Number of receptions"
+        },
+        "corridors_count": {
+          "type": "number",
+          "description": "Number of corridors"
+        },
+        "dimensions_summary": {
+          "type": "string",
+          "description": "Readable breakdown of room dimensions and areas",
+          "maxLength": 1500
+        },
+        "materials_summary": {
+          "type": "string",
+          "description": "Calculated paint, putty, sealer, and sandpaper quantities",
+          "maxLength": 2000
+        },
+        "status": {
+          "type": "string",
+          "description": "Lead follow-up status (new, contacted)",
+          "maxLength": 30
+        },
+        "created_at": {
+          "type": "string",
+          "description": "Lead creation ISO timestamp",
+          "maxLength": 100
+        },
+        "updated_at": {
+          "type": "string",
+          "description": "Lead update ISO timestamp",
+          "maxLength": 100
+        }
+      },
+      "required": [
+        "name",
+        "phone",
+        "total_area",
+        "ceiling_area",
+        "walls_area",
+        "rooms_count",
+        "receptions_count",
+        "corridors_count",
+        "dimensions_summary",
+        "materials_summary",
+        "status",
+        "created_at"
+      ]
+    },
+    "GalleryItem": {
+      "title": "Execution Stage Gallery Item",
+      "description": "Execution stage image and details displayed in the Execution Stages section",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Title of the execution stage",
+          "maxLength": 200
+        },
+        "stageName": {
+          "type": "string",
+          "description": "Execution stage label",
+          "maxLength": 100
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the work stage",
+          "maxLength": 1000
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the execution stage photo",
+          "maxLength": 800000
+        },
+        "order": {
+          "type": "number",
+          "description": "Display order of the stage"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation ISO timestamp",
+          "maxLength": 100
+        }
+      },
+      "required": ["title", "imageUrl"]
+    },
+    "CustomerReview": {
+      "title": "Customer Review",
+      "description": "Verified customer rating and review displayed on home and reviews screens",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Customer display name",
+          "maxLength": 150
+        },
+        "comment": {
+          "type": "string",
+          "description": "Customer review text",
+          "maxLength": 2000
+        },
+        "rating": {
+          "type": "number",
+          "description": "Star rating from 1 to 5"
+        },
+        "project": {
+          "type": "string",
+          "description": "Project type or neighborhood",
+          "maxLength": 150
+        },
+        "location": {
+          "type": "string",
+          "description": "Project city or area",
+          "maxLength": 100
+        },
+        "created_at": {
+          "type": "string",
+          "description": "Review creation ISO timestamp",
+          "maxLength": 100
+        }
+      },
+      "required": ["name", "comment", "rating", "created_at"]
+    }
+  },
+  "firestore": {
+    "/portfolio/{itemId}": {
+      "schema": {
+        "$ref": "#/entities/PortfolioItem"
+      },
+      "description": "Collection of executed portfolio project images and details"
+    },
+    "/prices/{priceId}": {
+      "schema": {
+        "$ref": "#/entities/PriceProduct"
+      },
+      "description": "Collection of paint brand and bucket prices"
+    },
+    "/complaints/{complaintId}": {
+      "schema": {
+        "$ref": "#/entities/CustomerComplaint"
+      },
+      "description": "Customer service complaints and inquiries"
+    },
+    "/orders/{orderId}": {
+      "schema": {
+        "$ref": "#/entities/CustomerOrder"
+      },
+      "description": "Customer orders and booking requests"
+    },
+    "/feedback/{feedbackId}": {
+      "schema": {
+        "$ref": "#/entities/CustomerFeedback"
+      },
+      "description": "Collection of customer complaints and suggestions"
+    },
+    "/analytics/{statId}": {
+      "schema": {
+        "$ref": "#/entities/SiteStats"
+      },
+      "description": "Real-time visitor counter analytics"
+    },
+    "/calculator_leads/{leadId}": {
+      "schema": {
+        "$ref": "#/entities/CalculatorLead"
+      },
+      "description": "Leads captured from the calculator soft gate"
+    },
+    "/gallery/{itemId}": {
+      "schema": {
+        "$ref": "#/entities/GalleryItem"
+      },
+      "description": "Execution stage gallery images shown in the Execution Stages section"
+    },
+    "/reviews/{reviewId}": {
+      "schema": {
+        "$ref": "#/entities/CustomerReview"
+      },
+      "description": "Immutable customer reviews and star ratings"
+    }
+  }
+}
