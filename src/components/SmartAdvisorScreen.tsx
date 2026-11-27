@@ -163,9 +163,11 @@ export function SmartAdvisorScreen({ onNavigate, onOpenColorInCatalog }: SmartAd
     };
 
     const controller = new AbortController();
+    
+    // تم تعديل الوقت هنا إلى 30000 (30 ثانية)
     const timeoutId = window.setTimeout(() => {
       controller.abort();
-    }, 5000);
+    }, 30000);
 
     try {
       const res = await fetch('/api/chat', {
