@@ -21,8 +21,8 @@ export default async function handler(req, res) {
       parts: [{ text: message }]
     });
 
-    // التعديل الجوهري هنا: استخدام موديل محدث ومعتمد
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`, {
+    // استخدام نموذج بديل ومستقر
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
